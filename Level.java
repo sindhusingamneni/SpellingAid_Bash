@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Level {
 	
+	ArrayList<String> words = new ArrayList<String>();
 	private int _score=0;
+	private boolean getout=false;;
 	HashMap<String, Integer> _stats = new HashMap<String, Integer>();
 	
 	public enum Levels{
@@ -20,16 +23,36 @@ public class Level {
 		}
 	}
 	
-	public void getInput() throws IOException{
-		File f=new File("./wordlist");
+	public void getInput(Levels lvl) throws IOException{
+		int level=lvl.value;
+		File f=new File("./NZCER-spelling-lists.txt");
 		if(f.exists()){
 			String scan;
 			FileReader in = new FileReader(f);
 			BufferedReader br = new BufferedReader(in);
+			String equate="%Level "+level;
+			String end="%Level "+(level++);
 			while(br.ready()){
 				scan=br.readLine();
-				//wordlist.add(scan);
+				if(scan.equals(equate)){
+				while(true){
+				scan=br.readLine();
+				if(scan.equals(end)){
+					getout=true;
+					break;
+				}
+				words.add(scan);
+				}
+				}
+				if(getout){
+					break;
+				}
 			}
 		}
+	}
+
+	
+	public void updateStats(){
+		
 	}
 }
